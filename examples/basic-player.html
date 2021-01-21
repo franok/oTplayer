@@ -5,7 +5,7 @@
 <input class="example-url" value="https://www.youtube.com/watch?v=nkBQpoaDhF4">
 <input class="example-url" value="http://ejb.github.io/progressor.js/demos/physics.mp4"> -->
 
-<p><label>Enter URL of MP3, MP4 or YouTube here... <input id="url-input"></label><p>
+<p><label>Enter URL of MP3, MP4 or YouTube here: &nbsp;&nbsp;<input id="url-input" size="60"></label><p>
 
 <div id="media"></div>
 
@@ -15,13 +15,17 @@
     <div id="player-time"></div>
     
     <button class="playPause">play/pause</button>
+    &nbsp;&nbsp;
     <button class="play">play</button>
     <button class="pause">pause</button>
-    <button class="back">back</button>
-    <button class="forward">forward</button>
+    &nbsp;&nbsp;
+    <button class="back">back (D)</button>
+    <button class="forward">forward (F)</button>
+    &nbsp;&nbsp;
     <button class="speed-down">speed down</button>
     <button class="speed-up">speed up</button>
-    <button class="reset">reset player</button>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <button class="reset" style="background-color:red; color:white;">reset player</button>
     <div class="current-speed"></div>
 </div>
 
@@ -42,6 +46,10 @@ var opts = {
     }
 }
 
+$( document ).ready(function() {
+    $( "#url-input" ).focus();
+});
+
 $('#url-input').change(function(){
     if (window.player) {
         window.player.reset();
@@ -49,7 +57,19 @@ $('#url-input').change(function(){
     opts.source = $(this).val();
     if (window.player) { window.player.reset(); }
     window.player = new oTplayer(opts);
+    $( ".playPause" ).focus();
 });
+
+// causes problems
+// $("body").keydown(function(e) {
+//     if(e.keyCode == 32 && $(this).val().indexOf(' ') >= 0){
+//         // if spacebar already pressed
+//         return false;
+//     }
+//     if(e.keyCode == 32) { // spacebar
+//     $( ".playPause" ).trigger( "click" );
+//   }
+// });
 
 $('.play').click(function(){
     player.play();
@@ -63,8 +83,20 @@ $('.back').click(function(){
     player.skip('back');
 });
 
+$("body").keydown(function(e) {
+  if(e.keyCode == 37 || e.keyCode == 68) { // left || d
+    player.skip('back');
+  }
+});
+
 $('.forward').click(function(){
     player.skip('forward');
+});
+
+$("body").keydown(function(e) {
+  if(e.keyCode == 39 || e.keyCode == 70) { // right || f
+    player.skip('forward');
+  }
 });
 
 $('.speed-up').click(function(){
