@@ -1,11 +1,11 @@
-<h1><a href="https://github.com/oTranscribe/oTplayer">oTplayer</a> basic demo</h1>
+<h1><a href="https://github.com/oTranscribe/oTplayer">oTplayer</a> Basic Player (offline)</h1>
 
-<p>Here's some URLs to try out:</p>
+<!-- <p>Here's some URLs to try out:</p>
 <input class="example-url" value="http://ejb.github.io/progressor.js/demos/echoplex.mp3">
 <input class="example-url" value="https://www.youtube.com/watch?v=nkBQpoaDhF4">
-<input class="example-url" value="http://ejb.github.io/progressor.js/demos/physics.mp4">
+<input class="example-url" value="http://ejb.github.io/progressor.js/demos/physics.mp4"> -->
 
-<p><label>Enter URL of MP3 file or YouTube video here... <input id="url-input"></label><p>
+<p><label>Enter URL of MP3, MP4 or YouTube here... <input id="url-input"></label><p>
 
 <div id="media"></div>
 
@@ -25,8 +25,8 @@
     <div class="current-speed"></div>
 </div>
 
-<script src="http://code.jquery.com/jquery-latest.min.js"></script>
-<script src="http://ejb.github.io/progressor.js/progressor.js" type="text/javascript" charset="utf-8"></script>
+<script src="./dependencies/jquery-1.11.1.min.js"></script>
+<script src="./dependencies/progressor.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="../dist/otplayer.js" type="text/javascript" charset="utf-8"></script>
 <script>
 
@@ -97,7 +97,7 @@ setInterval(function(){
     padding: 10px;
 }
 .progressor {
-    height: 5px;
+    height: 15px;
     width: 100%;
     background: #ccc;
 }
