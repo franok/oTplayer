@@ -146,10 +146,11 @@
             ls.last5Tracks = [];
         }
         localStorage.setItem('oTplayer-local', JSON.stringify(ls));
-        loadLast5Tracks();
+        displayLast5Tracks();
     }
 
     function storeTrackUri(trackUri) {
+        if(trackUri === '') return;
         var ls = JSON.parse(localStorage.getItem('oTplayer-local'));
         if (trackUri.length && ls.last5Tracks && !ls.last5Tracks.some(obj => obj === trackUri)) {
             ls.last5Tracks.unshift(trackUri);
@@ -157,21 +158,31 @@
                 ls.last5Tracks.pop();
             }
             localStorage.setItem('oTplayer-local', JSON.stringify(ls));
-            return;
-        }
-        if (trackUri.length && ls.last5Tracks) { //reorder to the top, if already in the list
+        } else { //reorder to the top, if already in the list
             let idx = ls.last5Tracks.findIndex(obj => obj === trackUri);
             ls.last5Tracks.splice(idx, 1);
             ls.last5Tracks.unshift(trackUri);
             localStorage.setItem('oTplayer-local', JSON.stringify(ls));
         }
+        displayLast5Tracks();
     }
 
-    function loadLast5Tracks() {
+    function removeTrackUri(trackUri) {
+        var ls = JSON.parse(localStorage.getItem('oTplayer-local'));
+        if (trackUri.length && ls.last5Tracks) {
+            let idx = ls.last5Tracks.findIndex(obj => obj === trackUri);
+            ls.last5Tracks.splice(idx, 1);
+            localStorage.setItem('oTplayer-local', JSON.stringify(ls));
+        }
+        displayLast5Tracks();
+    }
+
+    function displayLast5Tracks() {
         var ls = JSON.parse(localStorage.getItem('oTplayer-local'));
         if (ls != null) {
             var buttons = ls.last5Tracks.reduce((acc, obj) => {
-                return acc + '<button class="last-5-tracks" onclick="loadTrack(\'' + obj + '\')">' + obj + '</button><br>';
+                return acc + '<button class="last-5-tracks" onclick="loadTrack(\'' + obj + '\')">' + obj + '</button>'
+                + ' <button class="last-5-tracks" style="width: 3em !important;" onclick="removeTrackUri(\'' + obj + '\')">&#10006;</button><br>';
             }, "");
             document.getElementById("recent-tracks").innerHTML = buttons;
         }
@@ -180,6 +191,10 @@
 </script>
 
 <style>
+    body {
+        font-family: Arial;
+    }
+
     .example-url {
         width: 50%;
     }
