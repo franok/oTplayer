@@ -1,4 +1,4 @@
-<h1><a href="https://github.com/franok/oTplayer">oTplayer</a> Basic Player (offline)</h1>
+<h1><a href="https://github.com/franok/oTplayer" target="_blank">oTplayer</a> Basic Player (offline)</h1>
 
 <!-- <p>Here's some URLs to try out:</p>
 <input class="example-url" value="http://ejb.github.io/progressor.js/demos/echoplex.mp3">
@@ -11,9 +11,13 @@
 <p>
     <label>Enter URL of MP3, MP4 or YouTube here: &nbsp;&nbsp;<input id="url-input" size="60"></label>
     <button onclick="loadTrack();">Load</button>
+    <br>
+    <input type="checkbox" id="hide-player" name="hide-player" checked> <label for="hide-player">Hide Player Video
+        (applies for YouTube and .mp4 files)</label> <!-- //ToDo: persist status in localStorage -->
+    <br>
+    <!-- <input type="checkbox" id="hide-transcript" name="hide-transcript"> <label for="hide-transcript">Hide Transcript
+        Textarea</label> --> <!-- //ToDo: persist status in localStorage -->
 <p>
-
-<div id="media"></div>
 
 <div class="controls">
 
@@ -34,6 +38,15 @@
     <button class="reset" style="background-color:red; color:white;">Reset Player</button>
     <div class="current-speed"></div>
 </div>
+
+<p>
+    <!-- //ToDo: change keyboard shortcuts to work with Ctrl+ when editing the text area. -->
+    <!-- <textarea id="transcript" name="transcript" rows="20" cols="200"></textarea> -->
+    <!-- //ToDo: persist in localStorage, option to clear. Copy to clipboard button. Option to change font size. -->
+</p>
+
+<div id="media"></div>
+
 
 <script src="./dependencies/jquery-1.11.1.min.js"></script>
 <script src="./dependencies/progressor.min.js" type="text/javascript" charset="utf-8"></script>
@@ -60,6 +73,15 @@
     $('#url-input').on('keyup', function (e) {
         if (e.key === 'Enter' || e.keyCode === 13) {
             loadTrack();
+        }
+    });
+
+    $('#hide-transcript').change(function (e) {
+        var transcriptCheckbox = $('#hide-transcript');
+        if (transcriptCheckbox.is(":checked")) {
+            $('#transcript').hide();
+        } else {
+            $('#transcript').show();
         }
     });
 
@@ -129,6 +151,11 @@
         opts.source = trackUri;
         if (window.player) { window.player.reset(); }
         window.player = new oTplayer(opts);
+        if ($('#hide-player').is(":checked")) {
+            $('#oTplayerEl').hide();
+        } else {
+            $('#oTplayerEl').show();
+        }
         $(".playPause").focus();
     }
 
@@ -150,7 +177,7 @@
     }
 
     function storeTrackUri(trackUri) {
-        if(trackUri === '') return;
+        if (trackUri === '') return;
         var ls = JSON.parse(localStorage.getItem('oTplayer-local'));
         if (trackUri.length && ls.last5Tracks && !ls.last5Tracks.some(obj => obj === trackUri)) {
             ls.last5Tracks.unshift(trackUri);
@@ -182,7 +209,7 @@
         if (ls != null) {
             var buttons = ls.last5Tracks.reduce((acc, obj) => {
                 return acc + '<button class="last-5-tracks" onclick="loadTrack(\'' + obj + '\')">' + obj + '</button>'
-                + ' <button class="last-5-tracks" style="width: 3em !important;" onclick="removeTrackUri(\'' + obj + '\')">&#10006;</button><br>';
+                    + ' <button class="last-5-tracks" style="width: 3em !important;" onclick="removeTrackUri(\'' + obj + '\')">&#10006;</button><br>';
             }, "");
             document.getElementById("recent-tracks").innerHTML = buttons;
         }
@@ -217,11 +244,14 @@
     }
 
     #oTplayerEl {
-        max-width: 95vw; /* limit player width to 95% of window (viewport) width */
-        max-height: 100vh; /* 100% viewport height */
+        max-width: 95vw;
+        /* limit player width to 95% of window (viewport) width */
+        max-height: 100vh;
+        /* 100% viewport height */
     }
 
-    button, .my-button {
+    button,
+    .my-button {
         border-radius: 4px;
         border: 2px solid;
         border-color: transparent;
@@ -245,5 +275,10 @@
         margin-bottom: 2px;
         padding-top: auto;
         padding-bottom: auto;
+    }
+
+    textarea {
+        font-size: 18px;
+        max-width: 95vw;
     }
 </style>
