@@ -4,12 +4,14 @@
 <input class="example-url" value="http://ejb.github.io/progressor.js/demos/echoplex.mp3">
 <input class="example-url" value="https://www.youtube.com/watch?v=nkBQpoaDhF4">
 <input class="example-url" value="http://ejb.github.io/progressor.js/demos/physics.mp4"> -->
+<div id="recent-tracks">
+</div>
 
-<p><label>Enter URL of MP3, MP4 or YouTube here: &nbsp;&nbsp;<input id="url-input" size="60"></label><p>
-<!-- <p>
+<!-- <p><label>Enter URL of MP3, MP4 or YouTube here: &nbsp;&nbsp;<input id="url-input" size="60"></label><p> -->
+<p>
     <label>Enter URL of MP3, MP4 or YouTube here: &nbsp;&nbsp;<input id="url-input" size="60"></label>
-    <button onclick="">Load</button>
-<p> -->
+    <button class="my-button" onclick="loadTrack();">Load</button>
+<p>
 
 <div id="media"></div>
 
@@ -18,18 +20,18 @@
     <div id="player-hook"></div>
     <div id="player-time"></div>
 
-    <button class="playPause">play/pause</button>
+    <button class="my-button playPause">play/pause</button>
     &nbsp;&nbsp;
-    <button class="play">play</button>
-    <button class="pause">pause</button>
+    <button class="my-button play">play</button>
+    <button class="my-button pause">pause</button>
     &nbsp;&nbsp;
-    <button class="back">back (D)</button>
-    <button class="forward">forward (F)</button>
+    <button class="my-button back">back (D)</button>
+    <button class="my-button forward">forward (F)</button>
     &nbsp;&nbsp;
-    <button class="speed-down">speed down</button>
-    <button class="speed-up">speed up</button>
+    <button class="my-button speed-down">speed down</button>
+    <button class="my-button speed-up">speed up</button>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <button class="reset" style="background-color:red; color:white;">reset player</button>
+    <button class="my-button reset" style="background-color:red; color:white;">reset player</button>
     <div class="current-speed"></div>
 </div>
 
@@ -51,17 +53,14 @@
     }
 
     $(document).ready(function () {
+        initWebApp();
         $("#url-input").focus();
     });
 
-    $('#url-input').change(function () {
-        if (window.player) {
-            window.player.reset();
+    $('#url-input').on('keyup', function (e) {
+        if (e.key === 'Enter' || e.keyCode === 13) {
+            loadTrack();
         }
-        opts.source = $(this).val();
-        if (window.player) { window.player.reset(); }
-        window.player = new oTplayer(opts);
-        $(".playPause").focus();
     });
 
     // causes problems
@@ -121,6 +120,63 @@
         }
     }, 50);
 
+    function loadTrack(trackUri) {
+        if (window.player) {
+            window.player.reset();
+        }
+        trackUri = !trackUri ? $('#url-input').val() : trackUri;
+        storeTrackUri(trackUri);
+        opts.source = trackUri;
+        if (window.player) { window.player.reset(); }
+        window.player = new oTplayer(opts);
+        $(".playPause").focus();
+    }
+
+    function initWebApp() {
+
+        var ls = JSON.parse(localStorage.getItem('oTplayer-local'));
+
+        //check if there exists any data in localStorage
+        if (ls == null) { // don't do if(!oTplayer-local)
+            localStorage.setItem('oTplayer-local', '{"last5Tracks": []}');
+            return;
+        }
+
+        if (!ls.last5Tracks) {
+            ls.last5Tracks = [];
+        }
+        localStorage.setItem('oTplayer-local', JSON.stringify(ls));
+        loadLast5Tracks();
+    }
+
+    function storeTrackUri(trackUri) {
+        var ls = JSON.parse(localStorage.getItem('oTplayer-local'));
+        if (trackUri.length && ls.last5Tracks && !ls.last5Tracks.some(obj => obj === trackUri)) {
+            ls.last5Tracks.unshift(trackUri);
+            while (ls.last5Tracks.length > 5) {
+                ls.last5Tracks.pop();
+            }
+            localStorage.setItem('oTplayer-local', JSON.stringify(ls));
+            return;
+        }
+        if (trackUri.length && ls.last5Tracks) { //reorder to the top, if already in the list
+            let idx = ls.last5Tracks.findIndex(obj => obj === trackUri);
+            ls.last5Tracks.splice(idx, 1);
+            ls.last5Tracks.unshift(trackUri);
+            localStorage.setItem('oTplayer-local', JSON.stringify(ls));
+        }
+    }
+
+    function loadLast5Tracks() {
+        var ls = JSON.parse(localStorage.getItem('oTplayer-local'));
+        if (ls != null) {
+            var buttons = ls.last5Tracks.reduce((acc, obj) => {
+                return acc + '<button class="my-button last-5-tracks" onclick="loadTrack(\'' + obj + '\')">' + obj + '</button><br>';
+            }, "");
+            document.getElementById("recent-tracks").innerHTML = buttons;
+        }
+    }
+
 </script>
 
 <style>
@@ -143,5 +199,31 @@
     .progressor-progress {
         height: 100%;
         background: #777;
+    }
+
+    .my-button {
+        border-radius: 4px;
+        border: 2px solid;
+        border-color: transparent;
+        /* #4b8f29; */
+        display: inline-block;
+        cursor: pointer;
+        /* color:#FFFAF0; */
+        font-family: Arial;
+        font-size: 13px;
+        /* font-weight:bold; */
+        /* width: 10em; */
+        height: 2em;
+        margin: 0.25em;
+    }
+
+    .last-5-tracks {
+        background-color: #E6E6E6 !important;
+        color: #000 !important;
+        /* width: 100% !important; */
+        height: 3em !important;
+        margin-bottom: 2px;
+        padding-top: auto;
+        padding-bottom: auto;
     }
 </style>
