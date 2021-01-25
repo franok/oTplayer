@@ -10,7 +10,7 @@
 <!-- <p><label>Enter URL of MP3, MP4 or YouTube here: &nbsp;&nbsp;<input id="url-input" size="60"></label><p> -->
 <p>
     <label>Enter URL of MP3, MP4 or YouTube here: &nbsp;&nbsp;<input id="url-input" size="60"></label>
-    <button class="my-button" onclick="loadTrack();">Load</button>
+    <button onclick="loadTrack();">Load</button>
 <p>
 
 <div id="media"></div>
@@ -20,18 +20,18 @@
     <div id="player-hook"></div>
     <div id="player-time"></div>
 
-    <button class="my-button playPause">play/pause</button>
+    <button class="playPause">play/pause</button>
     &nbsp;&nbsp;
-    <button class="my-button play">play</button>
-    <button class="my-button pause">pause</button>
+    <button class="play">play</button>
+    <button class="pause">pause</button>
     &nbsp;&nbsp;
-    <button class="my-button back">back (D)</button>
-    <button class="my-button forward">forward (F)</button>
+    <button class="back">back (D)</button>
+    <button class="forward">forward (F)</button>
     &nbsp;&nbsp;
-    <button class="my-button speed-down">speed down</button>
-    <button class="my-button speed-up">speed up</button>
+    <button class="speed-down">speed down</button>
+    <button class="speed-up">speed up</button>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <button class="my-button reset" style="background-color:red; color:white;">reset player</button>
+    <button class="reset" style="background-color:red; color:white;">reset player</button>
     <div class="current-speed"></div>
 </div>
 
@@ -171,7 +171,7 @@
         var ls = JSON.parse(localStorage.getItem('oTplayer-local'));
         if (ls != null) {
             var buttons = ls.last5Tracks.reduce((acc, obj) => {
-                return acc + '<button class="my-button last-5-tracks" onclick="loadTrack(\'' + obj + '\')">' + obj + '</button><br>';
+                return acc + '<button class="last-5-tracks" onclick="loadTrack(\'' + obj + '\')">' + obj + '</button><br>';
             }, "");
             document.getElementById("recent-tracks").innerHTML = buttons;
         }
@@ -201,7 +201,7 @@
         background: #777;
     }
 
-    .my-button {
+    button, .my-button {
         border-radius: 4px;
         border: 2px solid;
         border-color: transparent;
