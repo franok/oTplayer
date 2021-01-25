@@ -41,17 +41,6 @@ module.exports = function(grunt) {
         }
       }
     },
-    githooks: {
-      options: {
-        // Task-specific options go here. 
-      },
-      all: {
-        options: {
-          // Target-specific options go here 
-        },
-      'pre-commit': 'concat uglify jshint qunit',
-      }
-    },
     watch: {
       files: ['<%= jshint.files %>'],
       tasks: ['jshint', 'concat', 'uglify', 'qunit']
@@ -63,10 +52,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-githooks');
 
   grunt.registerTask('test', ['qunit']);
-  grunt.registerTask('default', ['githooks', 'concat', 'uglify', 'jshint', 'qunit']);
+  grunt.registerTask('default', ['concat', 'uglify', 'jshint', 'qunit']);
   grunt.registerTask('watch', ['default', 'watch']);
 
 };
