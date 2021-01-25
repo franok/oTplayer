@@ -2,14 +2,14 @@
 
 HTML5 audio/video player for [oTranscribe](https://github.com/otranscribe/otranscribe). Requires jQuery and [progressor.js](https://github.com/ejb/progressor.js).
 
-oTplayer is a bring-your-own-interface component. See [this demo](http://otranscribe.com/oTplayer/examples/basic-player.html) for an example of a very basic GUI player.
+oTplayer is a bring-your-own-interface component.
 
 ## The Fork
 My fork is a quick and dirty edition, having on-board all the things required to use the player offline in a basic HTML UI.
 
 ### Instructions to run oTplayer out of the box
 
-Assumption: you have cloned this repository.
+Assumption: you have already cloned this repository.
 
 1. Open [`examples/basic-player.html`](./examples/basic-player.html) in your browser.
 
